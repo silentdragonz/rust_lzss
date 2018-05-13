@@ -1,0 +1,8 @@
+[package]
+name = "rust_lzss"
+version = "0.1.0"
+authors = ["silentdragonz <silentdragon@gmail.com>"]
+
+[dependencies]
+byteorder="*"
+bit-vec="0.5.0"
