@@ -1,5 +1,5 @@
-//! Decompresses LZSS types implemented by Nintendo
- 
+//! Decompresses LZSS types implemented by Nintendo based on https://github.com/magical/nlzss
+
 #![feature(iterator_step_by)]
 extern crate bit_vec;
 extern crate byteorder;
@@ -12,23 +12,23 @@ use std::mem::transmute;
 /// Parses an LZSS header and data block returning the decompressed result
 ///
 /// Assumes LZSS is constructed properly
-/// 
+///
 /// # Panics
 /// Will panic if the size in the data header is incorrect
-/// 
+///
 /// # Errors
 /// Returns an Error if the type is invalid or the size is wrong
-/// 
+///
 /// # Examples
-/// 
+///
 /// ```
 /// use rust_lzss::decompress;
 /// use std::io::Cursor;
-/// 
-/// let sample_data: [u8; 9] = [0x00, 0x61, 0x62, 0x63, 0x64, 0x65, 0x66, 0x67, 0x68]; // abcdefgh
-/// let decoded = decompress(&mut Cursor::new(sample_data));
+///
+/// let lzss10: [u8; 11] = [ 0x10, 0x14, 0x00, 0x00, 0x08, 0x61, 0x62, 0x63, 0x64, 0xD0, 0x03, ]; // abcdabcdabcdabcdabcdabcd
+/// let decoded = decompress(&mut Cursor::new(lzss10));
 /// ```
-pub fn decompress<T: Read + Seek + Sized>(data: &mut T) -> Result<Vec<u8>, Error> {
+pub fn decompress<T: Read + Seek>(data: &mut T) -> Result<Vec<u8>, Error> {
     let lz_type = data.read_u8()?;
     let mut data_size_tmp: [u8; 4] = [0; 4];
     data.read_exact(&mut data_size_tmp[0..3])?;
@@ -86,7 +86,7 @@ fn decompress_lzss11<T: Read + Seek>(data: &mut T, size: usize) -> Result<Vec<u8
             if bit {
                 let mut val = data.read_u8()?;
                 let indicator = val >> 4;
-                let mut count: u16 = 0;
+                let mut count: u16;
                 match indicator {
                     0 => {
                         count = u16::from(val) << 4;
