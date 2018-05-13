@@ -5,7 +5,7 @@ description = "LZSS Decompressor"
 authors = ["Garrett Johnson <silentdragon@gmail.com>"]
 license = "MIT"
 keywords = ["decompression", "lzss"]
-categories = ["compession"]
+categories = ["compression"]
 
 [badges]
 travis-ci = { repository = "silentdragonz/rust_lzss", branch = "master" }
