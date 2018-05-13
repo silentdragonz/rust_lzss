@@ -1,6 +1,5 @@
 //! Decompresses LZSS types implemented by Nintendo based on https://github.com/magical/nlzss
 
-#![feature(iterator_step_by)]
 extern crate bit_vec;
 extern crate byteorder;
 
@@ -152,7 +151,7 @@ mod tests {
 
         let mut result_lzss10: Vec<u8> = Vec::new();
         let mut result_lzss11: Vec<u8> = Vec::new();
-        for _ in (0..20).step_by(4) {
+        for _ in 0..5 {
             result_lzss10.push(0x61);
             result_lzss10.push(0x62);
             result_lzss10.push(0x63);
@@ -174,7 +173,7 @@ mod tests {
         let test2: [u8; 9] = [0x00, 0x61, 0x62, 0x63, 0x64, 0x65, 0x66, 0x67, 0x68]; // abcdefgh
         let test3: [u8; 7] = [0x08, 0x61, 0x62, 0x63, 0x64, 0xD0, 0x03]; // abcdabcdabcdabcdabcdabcd
         let mut result3: Vec<u8> = Vec::new();
-        for _ in (0..20).step_by(4) {
+        for _ in 0..5 {
             result3.push(0x61);
             result3.push(0x62);
             result3.push(0x63);
@@ -207,19 +206,19 @@ mod tests {
         let mut result4: Vec<u8> = Vec::new();
         let mut result5: Vec<u8> = Vec::new();
 
-        for _ in (0..20).step_by(4) {
+        for _ in 0..5 {
             result3.push(0x61);
             result3.push(0x62);
             result3.push(0x63);
             result3.push(0x64);
         }
-        for _ in (0..40).step_by(4) {
+        for _ in 0..10 {
             result4.push(0x61);
             result4.push(0x62);
             result4.push(0x63);
             result4.push(0x64);
         }
-        for _ in (0..400).step_by(4) {
+        for _ in 0..100 {
             result5.push(0x61);
             result5.push(0x62);
             result5.push(0x63);
