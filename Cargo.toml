@@ -1,8 +1,10 @@
 [package]
 name = "rust_lzss"
 version = "0.1.0"
-authors = ["silentdragonz <silentdragon@gmail.com>"]
+description = "LZSS Decompressor"
+authors = ["Garrett Johnson <silentdragon@gmail.com>"]
+license = "MIT"
 
 [dependencies]
-byteorder="*"
-bit-vec="0.5.0"
+byteorder="~1"
+bit-vec="~0.5"
