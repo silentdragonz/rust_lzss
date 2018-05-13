@@ -4,6 +4,12 @@ version = "0.1.0"
 description = "LZSS Decompressor"
 authors = ["Garrett Johnson <silentdragon@gmail.com>"]
 license = "MIT"
+keywords = ["decompression", "lzss"]
+categories = ["compession"]
+
+[badges]
+travis-ci = { repository = "silentdragonz/rust_lzss", branch = "master" }
+codecov = { repository = "silentdragonz/rust_lzss", branch = "master", service = "github" }
 
 [dependencies]
 byteorder="~1"
