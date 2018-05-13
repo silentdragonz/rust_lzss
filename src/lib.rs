@@ -66,7 +66,7 @@ fn decompress_lzss10<T: Read + Seek>(data: &mut T, size: usize) -> Result<Vec<u8
         }
     }
 
-    if size <= decompress_data.len() {
+    if size == decompress_data.len() {
         Ok(decompress_data)
     } else {
         Err(Error::new(
@@ -125,7 +125,7 @@ fn decompress_lzss11<T: Read + Seek>(data: &mut T, size: usize) -> Result<Vec<u8
         }
     }
 
-    if size <= decompress_data.len() {
+    if size == decompress_data.len() {
         Ok(decompress_data)
     } else {
         Err(Error::new(
@@ -148,6 +148,9 @@ mod tests {
         let lzss11: [u8; 11] = [
             0x11, 0x14, 0x00, 0x00, 0x08, 0x61, 0x62, 0x63, 0x64, 0xF0, 0x03,
         ]; // abcdabcdabcdabcdabcdabcd
+        let type_bad: [u8; 11] = [
+            0x13, 0x10, 0x00, 0x00, 0x08, 0x61, 0x62, 0x63, 0x64, 0xF0, 0x03,
+        ]; // abcdabcdabcdabcdabcdabcd
 
         let mut result_lzss10: Vec<u8> = Vec::new();
         let mut result_lzss11: Vec<u8> = Vec::new();
@@ -165,6 +168,10 @@ mod tests {
 
         assert_eq!(result_lzss10, decompress(&mut Cursor::new(lzss10)).unwrap());
         assert_eq!(result_lzss11, decompress(&mut Cursor::new(lzss11)).unwrap());
+        assert!(
+            decompress(&mut Cursor::new(type_bad)).is_err(),
+            "Should error on invalid type header"
+        );
     }
 
     #[test]
@@ -172,6 +179,9 @@ mod tests {
         let test1: [u8; 1] = [0x00];
         let test2: [u8; 9] = [0x00, 0x61, 0x62, 0x63, 0x64, 0x65, 0x66, 0x67, 0x68]; // abcdefgh
         let test3: [u8; 7] = [0x08, 0x61, 0x62, 0x63, 0x64, 0xD0, 0x03]; // abcdabcdabcdabcdabcdabcd
+        let test4_bad: [u8; 11] = [
+            0x10, 0x10, 0x00, 0x00, 0x08, 0x61, 0x62, 0x63, 0x64, 0xD0, 0x03,
+        ]; // abcdabcdabcdabcdabcdabcd
         let mut result3: Vec<u8> = Vec::new();
         for _ in 0..5 {
             result3.push(0x61);
@@ -193,6 +203,10 @@ mod tests {
             result3,
             decompress_lzss10(&mut Cursor::new(test3), 20).unwrap()
         );
+        assert!(
+            decompress(&mut Cursor::new(test4_bad)).is_err(),
+            "Should error on wrong size."
+        );
     }
 
     #[test]
@@ -202,6 +216,9 @@ mod tests {
         let test3: [u8; 7] = [0x08, 0x61, 0x62, 0x63, 0x64, 0xF0, 0x03]; // abcdabcdabcdabcdabcdabcd
         let test4: [u8; 8] = [0x08, 0x61, 0x62, 0x63, 0x64, 0x01, 0x30, 0x03]; // abcdabcdabcdabcdabcdabcd
         let test5: [u8; 9] = [0x08, 0x61, 0x62, 0x63, 0x64, 0x10, 0x07, 0xB0, 0x03]; // abcdabcdabcdabcdabcdabcd
+        let test6_bad: [u8; 11] = [
+            0x11, 0x10, 0x00, 0x00, 0x08, 0x61, 0x62, 0x63, 0x64, 0xF0, 0x03,
+        ]; // abcdabcdabcdabcdabcdabcd
         let mut result3: Vec<u8> = Vec::new();
         let mut result4: Vec<u8> = Vec::new();
         let mut result5: Vec<u8> = Vec::new();
@@ -246,6 +263,10 @@ mod tests {
         assert_eq!(
             result5,
             decompress_lzss11(&mut Cursor::new(test5), 400).unwrap()
+        );
+        assert!(
+            decompress(&mut Cursor::new(test6_bad)).is_err(),
+            "Should error on wrong size."
         );
     }
 }
