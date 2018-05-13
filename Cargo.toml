@@ -1,6 +1,6 @@
 [package]
 name = "rust_lzss"
-version = "0.1.0"
+version = "0.1.1"
 description = "LZSS Decompressor"
 authors = ["Garrett Johnson <silentdragon@gmail.com>"]
 license = "MIT"
